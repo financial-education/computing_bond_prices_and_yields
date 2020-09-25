@@ -1,0 +1,141 @@
+#+title: Bond Price and Yield
+#+author: Matt Brigida, Ph.D.
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+
+In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.
+
+#+BEGIN_SRC python :results output :exports both
+def present_value_annuity(C, rate, periods):
+    return C * (1 - 1 / pow(1 + rate, periods)) / rate
+
+C = 100
+rate = 0.07
+periods = 10
+
+print(round(present_value_annuity(C, rate, periods), 2))
+#+END_SRC
+
+
+** Calculating Bond Price Given YTM
+
+*** Annual Payments
+
+The source code below is in [[https://www.rust-lang.org/][Rust, which is a new systems programming language with a seemingly clairvoyant compiler.]]
+
+#+BEGIN_SRC rust :results output :exports both
+fn main() {
+    bond_value_annual_payments(0.07, 1000.0, 10.0, 0.05); //ytm, par, years, coupon
+}
+
+fn bond_value_annual_payments(ytm: f32, par: f32, years: f32, coupon: f32) {
+
+    let bv: f32 = par * coupon * (1.0 - 1.0 / (1.0 + ytm).powf(years)) / ytm + par / (1.0 + ytm).powf(years);
+    println!("The bond's value is: ${:.2}", bv);
+}
+
+#+END_SRC
+
+#+RESULTS:
+: The bond's value is: $859.53
+
+
+*** Semiannual Payments
+
+The source code below is written in [[https://en.wikipedia.org/wiki/C_(programming_language)][good old C.]]
+
+#+BEGIN_SRC C :results output :exports both :includes <math.h> <stdio.h> :libs -lm
+int
+main(){
+
+double ytm = 0.07;
+double par = 1000.0;
+double years = 10.0;
+double coupon = 0.05;
+
+double num_periods = years * 2.0;
+double rate_per_period = ytm / 2.0;
+double coupon_pmt_per_period = (coupon / 2.0) * par;
+
+double bv = coupon_pmt_per_period * (1 - 1 / pow(1 + rate_per_period, num_periods)) / rate_per_period + par / pow(1 + rate_per_period, num_periods);
+
+printf("The bond's value is $%.2f\n", bv);
+return 0;
+
+}
+
+#+END_SRC
+
+#+RESULTS:
+: The bond's value is $857.88
+
+
+
+#+BEGIN_COMMENT
+example with the gsl 
+
+#+BEGIN_SRC C :results output :exports both :includes <gsl/gsl_sf_bessel.h> <stdio.h> :libs -lgsl -lgslcblas -lm
+int
+main (void)
+{
+  double x = 5.0;
+  double y = gsl_sf_bessel_J0 (x);
+  printf ("J0(%g) = %.18e\n", x, y);
+  return 0;
+}
+#+END_SRC
+
+#+RESULTS:
+: J0(5) = -1.775967713143382642e-01
+#+END_COMMENT
+
+
+
+
+
+** Calculating the YTM Given the Price
+
+*** Annual Payments
+
+#+BEGIN_SRC python :results output :exports both
+from scipy import optimize
+
+coupon_pmt = 1000 * 0.05
+years = 10
+bv = 859.53  ## this is our bond value above (annual payments)
+
+def eq(YTM):
+    return(coupon_pmt * (1 - 1 / pow(1 + YTM, years)) / YTM + 1000 / pow(1 + YTM, years) - bv)
+    
+root = optimize.newton(eq, 0.1) ## 0.1 is our initial guess
+## note, there are not multiple roots here, but if there were would this root finder list them????
+
+print("The YTM is: ", round(root * 100, 2), "%")
+#+END_SRC
+
+#+RESULTS:
+: The YTM is:  7.0 %
+
+
+
+
+
+* [[https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests][Reading Ease Score]]
+
+#+BEGIN_SRC elisp :results output :exports results
+(print (writegood-reading-ease))
+#+END_SRC
+
+#+RESULTS:
+: 
+: "Flesch-Kincaid reading ease score: 109.84 Very easy (5th grade)"
+
+#+BEGIN_SRC elisp :results output :exports results
+(print (writegood-grade-level))
+#+END_SRC
+
+#+RESULTS:
+: 
+: "Flesch-Kincaid grade level score: 0.24"
+
+
+
