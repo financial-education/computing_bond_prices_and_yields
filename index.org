@@ -75,7 +75,7 @@ fn bond_value_annual_payments(ytm: f32, par: f32, years: f32, coupon: f32) {
 
 *** Semiannual Payments
 
-The source code below is written in [[https://en.wikipedia.org/wiki/C_(programming_language)][good old C.]]
+The source code below is written in [[https://en.wikipedia.org/wiki/C_(programming_language)][good old C.]]  The bond has the same $YTM$, par value, years, and coupon rate as the above calculation.  The only difference is this bond makes semiannual payments.  Note the calculation of the coupon and rate per period, and the number of periods to adjust for the semiannual period.
 
 #+BEGIN_SRC C :results output :exports both :includes <math.h> <stdio.h> :libs -lm
 int

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-09-25 Fri 22:04 -->
+<!-- 2020-09-26 Sat 11:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bond Price and Yield</title>
@@ -262,22 +262,22 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0a47879">0.1. Calculating Bond Price Given YTM</a>
+<li><a href="#orgd7bf0ef">0.1. Calculating Bond Price Given YTM</a>
 <ul>
-<li><a href="#org6585ebf">0.1.1. Annual Payments</a></li>
-<li><a href="#orgb64e65c">0.1.2. Semiannual Payments</a></li>
-<li><a href="#orgdb7bbdb">0.1.3. The effect of semiannual compounding</a></li>
+<li><a href="#orgd666cfb">0.1.1. Annual Payments</a></li>
+<li><a href="#org628c8f1">0.1.2. Semiannual Payments</a></li>
+<li><a href="#orgbf6dca8">0.1.3. The effect of semiannual compounding</a></li>
 </ul>
 </li>
-<li><a href="#org480368a">0.2. Calculating the YTM Given the Price</a>
+<li><a href="#org198e45e">0.2. Calculating the YTM Given the Price</a>
 <ul>
-<li><a href="#org58de163">0.2.1. Annual Payments</a></li>
-<li><a href="#orgd261b63">0.2.2. Semiannual payments</a></li>
+<li><a href="#org5081c38">0.2.1. Annual Payments</a></li>
+<li><a href="#org3406838">0.2.2. Semiannual payments</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgab61e27">1. Reading Ease Score</a></div>
+<li><a href="#orgd1665f8">1. Reading Ease Score</a></div>
 </div>
 <p>
 In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.  Before we do, however, it is important to understand why we do these calculations and what they mean. First consider:
@@ -303,8 +303,8 @@ So here we have three separate notes each with different prices but the same yie
 We are not <b><b>valuing</b></b> a bond here however.  Bond valuation means figuring out how much a bond is worth, and can be done using, for example, zero coupon bonds (for treasury bonds). What we are doing is being told the yield, which with the bond's features (maturity, coupon, etc), uniquely determines the price.  You can think of this a <b><b>bond price/yield translation</b></b>.
 </p>
 
-<div id="outline-container-org0a47879" class="outline-3">
-<h3 id="org0a47879"><span class="section-number-3">0.1</span> Calculating Bond Price Given YTM</h3>
+<div id="outline-container-orgd7bf0ef" class="outline-3">
+<h3 id="orgd7bf0ef"><span class="section-number-3">0.1</span> Calculating Bond Price Given YTM</h3>
 <div class="outline-text-3" id="text-0-1">
 <p>
 The only thing we have to take care doing is setting up the cash flow per period and the rate per period.  Once we understand these, calculation of the bond value is a simply application of the time-value-of-money formulas we learned earlier. 
@@ -398,8 +398,8 @@ where \(YTM\) denotes the yield-to-maturity.
 </div>
 
 
-<div id="outline-container-org6585ebf" class="outline-4">
-<h4 id="org6585ebf"><span class="section-number-4">0.1.1</span> Annual Payments</h4>
+<div id="outline-container-orgd666cfb" class="outline-4">
+<h4 id="orgd666cfb"><span class="section-number-4">0.1.1</span> Annual Payments</h4>
 <div class="outline-text-4" id="text-0-1-1">
 <p>
 The source code below is in <a href="https://www.rust-lang.org/">Rust, which is a new systems programming language with a seemingly clairvoyant compiler.</a>
@@ -427,11 +427,11 @@ The bond's value is: $859.53
 </div>
 
 
-<div id="outline-container-orgb64e65c" class="outline-4">
-<h4 id="orgb64e65c"><span class="section-number-4">0.1.2</span> Semiannual Payments</h4>
+<div id="outline-container-org628c8f1" class="outline-4">
+<h4 id="org628c8f1"><span class="section-number-4">0.1.2</span> Semiannual Payments</h4>
 <div class="outline-text-4" id="text-0-1-2">
 <p>
-The source code below is written in <a href="https://en.wikipedia.org/wiki/C_(programming_language)">good old C.</a>
+The source code below is written in <a href="https://en.wikipedia.org/wiki/C_(programming_language)">good old C.</a>  The bond has the same \(YTM\), par value, years, and coupon rate as the above calculation.  The only difference is this bond makes semiannual payments.  Note the calculation of the coupon and rate per period, and the number of periods to adjust for the semiannual period.
 </p>
 
 <div class="org-src-container">
@@ -465,8 +465,8 @@ The bond's value is $857.88
 </div>
 
 
-<div id="outline-container-orgdb7bbdb" class="outline-4">
-<h4 id="orgdb7bbdb"><span class="section-number-4">0.1.3</span> The effect of semiannual compounding</h4>
+<div id="outline-container-orgbf6dca8" class="outline-4">
+<h4 id="orgbf6dca8"><span class="section-number-4">0.1.3</span> The effect of semiannual compounding</h4>
 <div class="outline-text-4" id="text-0-1-3">
 <p>
 Note the above two bonds have the same coupon, time to maturity, and yield.  The only difference is the latter has semiannual compounding.  So can you explain why the second bond has a lower price?
@@ -479,12 +479,12 @@ Note the above two bonds have the same coupon, time to maturity, and yield.  The
 
 
 
-<div id="outline-container-org480368a" class="outline-3">
-<h3 id="org480368a"><span class="section-number-3">0.2</span> Calculating the YTM Given the Price</h3>
+<div id="outline-container-org198e45e" class="outline-3">
+<h3 id="org198e45e"><span class="section-number-3">0.2</span> Calculating the YTM Given the Price</h3>
 <div class="outline-text-3" id="text-0-2">
 </div>
-<div id="outline-container-org58de163" class="outline-4">
-<h4 id="org58de163"><span class="section-number-4">0.2.1</span> Annual Payments</h4>
+<div id="outline-container-org5081c38" class="outline-4">
+<h4 id="org5081c38"><span class="section-number-4">0.2.1</span> Annual Payments</h4>
 <div class="outline-text-4" id="text-0-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #4f97d7; font-weight: bold;">from</span> scipy <span style="color: #4f97d7; font-weight: bold;">import</span> optimize
@@ -510,8 +510,8 @@ The YTM is:  7.0 %
 </div>
 </div>
 
-<div id="outline-container-orgd261b63" class="outline-4">
-<h4 id="orgd261b63"><span class="section-number-4">0.2.2</span> Semiannual payments</h4>
+<div id="outline-container-org3406838" class="outline-4">
+<h4 id="org3406838"><span class="section-number-4">0.2.2</span> Semiannual payments</h4>
 <div class="outline-text-4" id="text-0-2-2">
 <div class="org-src-container">
 <pre class="src src-R">par <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1000.0
@@ -539,18 +539,18 @@ print<span style="color: #4f97d7;">(</span>paste0<span style="color: #bc6ec5;">(
 </div>
 
 
-<div id="outline-container-orgab61e27" class="outline-2">
-<h2 id="orgab61e27"><span class="section-number-2">1</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
+<div id="outline-container-orgd1665f8" class="outline-2">
+<h2 id="orgd1665f8"><span class="section-number-2">1</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
 <div class="outline-text-2" id="text-1">
 <pre class="example">
 
-"Flesch-Kincaid reading ease score: 101.16 Very easy (5th grade)"
+"Flesch-Kincaid reading ease score: 100.46 Very easy (5th grade)"
 
 </pre>
 
 <pre class="example">
 
-"Flesch-Kincaid grade level score: 2.31"
+"Flesch-Kincaid grade level score: 2.43"
 
 </pre>
 </div>
@@ -558,7 +558,7 @@ print<span style="color: #4f97d7;">(</span>paste0<span style="color: #bc6ec5;">(
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2020-09-25 Fri 22:04</p>
+<p class="date">Created: 2020-09-26 Sat 11:25</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
