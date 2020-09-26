@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-08-31 Mon 14:11 -->
+<!-- 2020-09-25 Fri 22:04 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bond Price and Yield</title>
@@ -232,6 +232,28 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -240,49 +262,144 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org535391b">0.1. Calculating Bond Price Given YTM</a>
+<li><a href="#org0a47879">0.1. Calculating Bond Price Given YTM</a>
 <ul>
-<li><a href="#orgfa810cb">0.1.1. Annual Payments</a></li>
-<li><a href="#org2d99351">0.1.2. Semiannual Payments</a></li>
+<li><a href="#org6585ebf">0.1.1. Annual Payments</a></li>
+<li><a href="#orgb64e65c">0.1.2. Semiannual Payments</a></li>
+<li><a href="#orgdb7bbdb">0.1.3. The effect of semiannual compounding</a></li>
 </ul>
 </li>
-<li><a href="#org4102c38">0.2. Calculating the YTM Given the Price</a>
+<li><a href="#org480368a">0.2. Calculating the YTM Given the Price</a>
 <ul>
-<li><a href="#orgdf6e77a">0.2.1. Annual Payments</a></li>
+<li><a href="#org58de163">0.2.1. Annual Payments</a></li>
+<li><a href="#orgd261b63">0.2.2. Semiannual payments</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgd085e01">1. Reading Ease Score</a></div>
+<li><a href="#orgab61e27">1. Reading Ease Score</a></div>
 </div>
 <p>
-In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.
+In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.  Before we do, however, it is important to understand why we do these calculations and what they mean. First consider:
 </p>
 
-<div class="org-src-container">
-<pre class="src src-python"><span style="color: #4f97d7; font-weight: bold;">def</span> <span style="color: #bc6ec5; font-weight: bold;">present_value_annuity</span><span style="color: #4f97d7;">(</span>C, rate, periods<span style="color: #4f97d7;">)</span>:
-<span style="background-color: #292e34;"> </span>   <span style="color: #4f97d7; font-weight: bold;">return</span> C * <span style="color: #4f97d7;">(</span>1 - 1 / <span style="color: #4f97d7;">pow</span><span style="color: #bc6ec5;">(</span>1 + rate, periods<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span> / rate
-
-<span style="color: #7590db;">C</span> = 100
-<span style="color: #7590db;">rate</span> = 0.07
-<span style="color: #7590db;">periods</span> = 10
-
-<span style="color: #4f97d7; font-weight: bold;">print</span><span style="color: #4f97d7;">(</span><span style="color: #4f97d7;">round</span><span style="color: #bc6ec5;">(</span>present_value_annuity<span style="color: #2d9574;">(</span>C, rate, periods<span style="color: #2d9574;">)</span>, 2<span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
-</pre>
-</div>
-
 <pre class="example">
-702.36
-
+We quote a bond by its yield and not its price.
 </pre>
 
+<p>
+Why?  For students who have more experience with stock this may not make sense at first. However, consider that there is <b><b>one traded stock for each company</b></b>, but that <b><b>there may be many different bonds which qualify as 10-year treasury notes</b></b>.  Each of these notes may have a different price, but they all have the same yield.  So while there is no ambiguity in quoting the price of a stock, if you quote the price of one of the notes it is ambiguous&#x2014;quoting the yield is unique however.
+</p>
 
-<div id="outline-container-org535391b" class="outline-3">
-<h3 id="org535391b"><span class="section-number-3">0.1</span> Calculating Bond Price Given YTM</h3>
+<p>
+To understand why there may be many prices for treasury notes, consider that a 30 year treasury bond issued 20 years ago is now a 10-year treasury note.  Because yields were much higher 20 years ago, this present 10-year note will have a price far above par value ($1000). Similarly, a 20-year bond issued 10 years ago is now a 10 year bond (well the 20 year was last issued in 1986), and it will also have a price above par given declining interest rates.  Lastly, a 10 year treasury note sold today will sell for par.   
+</p>
+
+<p>
+So here we have three separate notes each with different prices but the same yield. This is why quoting the price is not meaningful for bonds.  That said, given the yield we have to calculate the price if we would like to buy the bond&#x2014;bond orders are by price.  Hence, here we calculation the price given the yield and vice versa.
+</p>
+
+<p>
+We are not <b><b>valuing</b></b> a bond here however.  Bond valuation means figuring out how much a bond is worth, and can be done using, for example, zero coupon bonds (for treasury bonds). What we are doing is being told the yield, which with the bond's features (maturity, coupon, etc), uniquely determines the price.  You can think of this a <b><b>bond price/yield translation</b></b>.
+</p>
+
+<div id="outline-container-org0a47879" class="outline-3">
+<h3 id="org0a47879"><span class="section-number-3">0.1</span> Calculating Bond Price Given YTM</h3>
 <div class="outline-text-3" id="text-0-1">
+<p>
+The only thing we have to take care doing is setting up the cash flow per period and the rate per period.  Once we understand these, calculation of the bond value is a simply application of the time-value-of-money formulas we learned earlier. 
+</p>
+
+<p>
+\[Bond\ Value = Present\ Value\ of\ the\ Coupon\ Payments + Present\ Value\ of\ the\ Par\ Value\]
+</p>
+
+<p>
+Letting \(C\), \(r\), \(par\), and \(n\) denote the coupon payment per period, rate per period, par value, and number of periods respectively:
+</p>
+
+<p>
+\[Bond\ Value = C \frac{\left(1 - \frac{1}{(1 + r)^n}\right)}{r} + \frac{par}{(1 + r)^n}\]
+</p>
+
+<p>
+which you may notice is just the present value of an annuity plus the present value of the bond's par value.
+</p>
+
+<p>
+Importantly, note I have written the coupon and rate <b><b>per period</b></b>.  
+</p>
+
+<p>
+Coupon:
+</p>
+<ul class="org-ul">
+<li>If the bond has an annual period, then the coupon payment per period is just the coupon rate times the par value ($1000).</li>
+<li>If the bond has a semiannual period, then the coupon payment per period is the product of the coupon rate times and the par value divided by 2, i.e. \(\frac{coupon\ rate * par}{2}\).</li>
+</ul>
+
+<p>
+Rate:
+</p>
+<ul class="org-ul">
+<li>If the bond has an annual period, then the rate per period is just the yield-to-maturity.</li>
+<li>If the bond has a semiannual period, then the rate per period is the yield-to-maturity divided by 2.</li>
+</ul>
+
+<p>
+Number of Periods:
+</p>
+<ul class="org-ul">
+<li>If the bond has an annual period, then the number of periods is the number of years.</li>
+<li>If the bond has a semiannual period, then the number of periods is the number of years times 2.</li>
+</ul>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Period Type</th>
+<th scope="col" class="org-left">Coupon per Period</th>
+<th scope="col" class="org-left">Rate per Period</th>
+<th scope="col" class="org-left">Number of Periods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Annual</td>
+<td class="org-left">\(coupon\ rate * par\)</td>
+<td class="org-left">\(YTM\)</td>
+<td class="org-left">\(number\ of\ years\)</td>
+</tr>
+
+<tr>
+<td class="org-left">Semiannual</td>
+<td class="org-left">\(\frac{coupon\ rate * par}{2}\)</td>
+<td class="org-left">\(\frac{YTM}{2}\)</td>
+<td class="org-left">\(number\ of\ years * 2\)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+where \(YTM\) denotes the yield-to-maturity.
+</p>
 </div>
-<div id="outline-container-orgfa810cb" class="outline-4">
-<h4 id="orgfa810cb"><span class="section-number-4">0.1.1</span> Annual Payments</h4>
+
+
+<div id="outline-container-org6585ebf" class="outline-4">
+<h4 id="org6585ebf"><span class="section-number-4">0.1.1</span> Annual Payments</h4>
 <div class="outline-text-4" id="text-0-1-1">
 <p>
 The source code below is in <a href="https://www.rust-lang.org/">Rust, which is a new systems programming language with a seemingly clairvoyant compiler.</a>
@@ -310,8 +427,8 @@ The bond's value is: $859.53
 </div>
 
 
-<div id="outline-container-org2d99351" class="outline-4">
-<h4 id="org2d99351"><span class="section-number-4">0.1.2</span> Semiannual Payments</h4>
+<div id="outline-container-orgb64e65c" class="outline-4">
+<h4 id="orgb64e65c"><span class="section-number-4">0.1.2</span> Semiannual Payments</h4>
 <div class="outline-text-4" id="text-0-1-2">
 <p>
 The source code below is written in <a href="https://en.wikipedia.org/wiki/C_(programming_language)">good old C.</a>
@@ -346,18 +463,28 @@ The bond's value is $857.88
 </pre>
 </div>
 </div>
+
+
+<div id="outline-container-orgdb7bbdb" class="outline-4">
+<h4 id="orgdb7bbdb"><span class="section-number-4">0.1.3</span> The effect of semiannual compounding</h4>
+<div class="outline-text-4" id="text-0-1-3">
+<p>
+Note the above two bonds have the same coupon, time to maturity, and yield.  The only difference is the latter has semiannual compounding.  So can you explain why the second bond has a lower price?
+</p>
+</div>
+</div>
 </div>
 
 
 
 
 
-<div id="outline-container-org4102c38" class="outline-3">
-<h3 id="org4102c38"><span class="section-number-3">0.2</span> Calculating the YTM Given the Price</h3>
+<div id="outline-container-org480368a" class="outline-3">
+<h3 id="org480368a"><span class="section-number-3">0.2</span> Calculating the YTM Given the Price</h3>
 <div class="outline-text-3" id="text-0-2">
 </div>
-<div id="outline-container-orgdf6e77a" class="outline-4">
-<h4 id="orgdf6e77a"><span class="section-number-4">0.2.1</span> Annual Payments</h4>
+<div id="outline-container-org58de163" class="outline-4">
+<h4 id="org58de163"><span class="section-number-4">0.2.1</span> Annual Payments</h4>
 <div class="outline-text-4" id="text-0-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #4f97d7; font-weight: bold;">from</span> scipy <span style="color: #4f97d7; font-weight: bold;">import</span> optimize
@@ -382,24 +509,48 @@ The YTM is:  7.0 %
 </pre>
 </div>
 </div>
+
+<div id="outline-container-orgd261b63" class="outline-4">
+<h4 id="orgd261b63"><span class="section-number-4">0.2.2</span> Semiannual payments</h4>
+<div class="outline-text-4" id="text-0-2-2">
+<div class="org-src-container">
+<pre class="src src-R">par <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 1000.0
+years <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 10.0
+coupon <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 0.05
+bv <span style="color: #ce537a; font-weight: bold;">&lt;-</span> 857.88
+
+num_periods <span style="color: #ce537a; font-weight: bold;">&lt;-</span> years * 2.0
+coupon_pmt_per_period <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7;">(</span>coupon / 2.0<span style="color: #4f97d7;">)</span> * par
+
+<span style="color: #bc6ec5; font-weight: bold;">eq</span> <span style="color: #ce537a; font-weight: bold;">&lt;-</span> <span style="color: #4f97d7; font-weight: bold;">function</span><span style="color: #4f97d7;">(</span>ytm<span style="color: #4f97d7;">){</span>
+    <span style="color: #bc6ec5;">(</span>coupon_pmt_per_period * <span style="color: #2d9574;">(</span>1 - 1 /<span style="color: #67b11d;">(</span>1 + ytm / 2<span style="color: #67b11d;">)</span>^num_periods<span style="color: #2d9574;">)</span> / <span style="color: #2d9574;">(</span>ytm / 2<span style="color: #2d9574;">)</span> + par / <span style="color: #2d9574;">(</span>1 + ytm / 2<span style="color: #2d9574;">)</span>^num_periods - bv<span style="color: #bc6ec5;">)</span>^2
+<span style="color: #4f97d7;">}</span>
+
+print<span style="color: #4f97d7;">(</span>paste0<span style="color: #bc6ec5;">(</span><span style="color: #2d9574;">"The YTM is: "</span>, round<span style="color: #2d9574;">(</span>optim<span style="color: #67b11d;">(</span>0.1, eq<span style="color: #67b11d;">)</span>$par * 100, 2<span style="color: #2d9574;">)</span>, <span style="color: #2d9574;">"%"</span><span style="color: #bc6ec5;">)</span><span style="color: #4f97d7;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+[1] "The YTM is: 7%"
+
+</pre>
+</div>
+</div>
 </div>
 
 
-
-
-
-<div id="outline-container-orgd085e01" class="outline-2">
-<h2 id="orgd085e01"><span class="section-number-2">1</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
+<div id="outline-container-orgab61e27" class="outline-2">
+<h2 id="orgab61e27"><span class="section-number-2">1</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
 <div class="outline-text-2" id="text-1">
 <pre class="example">
 
-"Flesch-Kincaid reading ease score: 112.49 Very easy (5th grade)"
+"Flesch-Kincaid reading ease score: 101.16 Very easy (5th grade)"
 
 </pre>
 
 <pre class="example">
 
-"Flesch-Kincaid grade level score: -0.38"
+"Flesch-Kincaid grade level score: 2.31"
 
 </pre>
 </div>
@@ -407,7 +558,7 @@ The YTM is:  7.0 %
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2020-08-31 Mon 14:11</p>
+<p class="date">Created: 2020-09-25 Fri 22:04</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

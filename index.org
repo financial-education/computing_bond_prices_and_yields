@@ -2,21 +2,55 @@
 #+author: Matt Brigida, Ph.D.
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
 
-In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.
+In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.  Before we do, however, it is important to understand why we do these calculations and what they mean. First consider:
 
-#+BEGIN_SRC python :results output :exports both
-def present_value_annuity(C, rate, periods):
-    return C * (1 - 1 / pow(1 + rate, periods)) / rate
+#+BEGIN_EXAMPLE
+We quote a bond by its yield and not its price.
+#+END_EXAMPLE
 
-C = 100
-rate = 0.07
-periods = 10
+Why?  For students who have more experience with stock this may not make sense at first. However, consider that there is **one traded stock for each company**, but that **there may be many different bonds which qualify as 10-year treasury notes**.  Each of these notes may have a different price, but they all have the same yield.  So while there is no ambiguity in quoting the price of a stock, if you quote the price of one of the notes it is ambiguous---quoting the yield is unique however.
 
-print(round(present_value_annuity(C, rate, periods), 2))
-#+END_SRC
+To understand why there may be many prices for treasury notes, consider that a 30 year treasury bond issued 20 years ago is now a 10-year treasury note.  Because yields were much higher 20 years ago, this present 10-year note will have a price far above par value ($1000). Similarly, a 20-year bond issued 10 years ago is now a 10 year bond (well the 20 year was last issued in 1986), and it will also have a price above par given declining interest rates.  Lastly, a 10 year treasury note sold today will sell for par.   
 
+So here we have three separate notes each with different prices but the same yield. This is why quoting the price is not meaningful for bonds.  That said, given the yield we have to calculate the price if we would like to buy the bond---bond orders are by price.  Hence, here we calculation the price given the yield and vice versa.
+
+We are not **valuing** a bond here however.  Bond valuation means figuring out how much a bond is worth, and can be done using, for example, zero coupon bonds (for treasury bonds). What we are doing is being told the yield, which with the bond's features (maturity, coupon, etc), uniquely determines the price.  You can think of this a **bond price/yield translation**.
 
 ** Calculating Bond Price Given YTM
+
+The only thing we have to take care doing is setting up the cash flow per period and the rate per period.  Once we understand these, calculation of the bond value is a simply application of the time-value-of-money formulas we learned earlier. 
+
+$$Bond\ Value = Present\ Value\ of\ the\ Coupon\ Payments + Present\ Value\ of\ the\ Par\ Value$$
+
+Letting $C$, $r$, $par$, and $n$ denote the coupon payment per period, rate per period, par value, and number of periods respectively:
+
+$$Bond\ Value = C \frac{\left(1 - \frac{1}{(1 + r)^n}\right)}{r} + \frac{par}{(1 + r)^n}$$
+
+which you may notice is just the present value of an annuity plus the present value of the bond's par value.
+
+Importantly, note I have written the coupon and rate **per period**.  
+
+Coupon:
+- If the bond has an annual period, then the coupon payment per period is just the coupon rate times the par value ($1000).
+- If the bond has a semiannual period, then the coupon payment per period is the product of the coupon rate times and the par value divided by 2, i.e. $\frac{coupon\ rate * par}{2}$.
+
+Rate:
+- If the bond has an annual period, then the rate per period is just the yield-to-maturity.
+- If the bond has a semiannual period, then the rate per period is the yield-to-maturity divided by 2.
+
+Number of Periods:
+- If the bond has an annual period, then the number of periods is the number of years.
+- If the bond has a semiannual period, then the number of periods is the number of years times 2.
+
+
+| Period Type | Coupon per Period              | Rate per Period | Number of Periods       |
+|-------------+--------------------------------+-----------------+-------------------------|
+| Annual      | $coupon\ rate * par$           | $YTM$           | $number\ of\ years$     |
+| Semiannual  | $\frac{coupon\ rate * par}{2}$ | $\frac{YTM}{2}$ | $number\ of\ years * 2$ |
+|-------------+--------------------------------+-----------------+-------------------------|
+
+where $YTM$ denotes the yield-to-maturity.
+
 
 *** Annual Payments
 
@@ -69,6 +103,11 @@ return 0;
 : The bond's value is $857.88
 
 
+*** The effect of semiannual compounding
+
+Note the above two bonds have the same coupon, time to maturity, and yield.  The only difference is the latter has semiannual compounding.  So can you explain why the second bond has a lower price?
+
+
 
 #+BEGIN_COMMENT
 example with the gsl 
@@ -115,8 +154,26 @@ print("The YTM is: ", round(root * 100, 2), "%")
 #+RESULTS:
 : The YTM is:  7.0 %
 
+*** Semiannual payments
 
+#+BEGIN_SRC R :results output :exports both
+par <- 1000.0
+years <- 10.0
+coupon <- 0.05
+bv <- 857.88
 
+num_periods <- years * 2.0
+coupon_pmt_per_period <- (coupon / 2.0) * par
+
+eq <- function(ytm){
+    (coupon_pmt_per_period * (1 - 1 /(1 + ytm / 2)^num_periods) / (ytm / 2) + par / (1 + ytm / 2)^num_periods - bv)^2
+}
+
+print(paste0("The YTM is: ", round(optim(0.1, eq)$par * 100, 2), "%"))
+#+END_SRC
+
+#+RESULTS:
+: [1] "The YTM is: 7%"
 
 
 * [[https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests][Reading Ease Score]]
@@ -127,7 +184,7 @@ print("The YTM is: ", round(root * 100, 2), "%")
 
 #+RESULTS:
 : 
-: "Flesch-Kincaid reading ease score: 109.84 Very easy (5th grade)"
+: "Flesch-Kincaid reading ease score: 104.37 Very easy (5th grade)"
 
 #+BEGIN_SRC elisp :results output :exports results
 (print (writegood-grade-level))
@@ -135,7 +192,7 @@ print("The YTM is: ", round(root * 100, 2), "%")
 
 #+RESULTS:
 : 
-: "Flesch-Kincaid grade level score: 0.24"
+: "Flesch-Kincaid grade level score: 1.52"
 
 
 
