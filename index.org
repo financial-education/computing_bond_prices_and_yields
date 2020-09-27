@@ -16,7 +16,7 @@ So here we have three separate notes each with different prices but the same yie
 
 We are not **valuing** a bond here however.  Bond valuation means figuring out how much a bond is worth, and can be done using, for example, zero coupon bonds (for treasury bonds). What we are doing is being told the yield, which with the bond's features (maturity, coupon, etc), uniquely determines the price.  You can think of this a **bond price/yield translation**.
 
-** Calculating Bond Price Given YTM
+* Calculating Bond Price Given YTM
 
 The only thing we have to take care doing is setting up the cash flow per period and the rate per period.  Once we understand these, calculation of the bond value is a simply application of the time-value-of-money formulas we learned earlier. 
 
@@ -52,7 +52,7 @@ Number of Periods:
 where $YTM$ denotes the yield-to-maturity.
 
 
-*** Annual Payments
+** Annual Payments
 
 The source code below is in [[https://www.rust-lang.org/][Rust, which is a new systems programming language with a seemingly clairvoyant compiler.]]
 
@@ -73,7 +73,7 @@ fn bond_value_annual_payments(ytm: f32, par: f32, years: f32, coupon: f32) {
 : The bond's value is: $859.53
 
 
-*** Semiannual Payments
+** Semiannual Payments
 
 The source code below is written in [[https://en.wikipedia.org/wiki/C_(programming_language)][good old C.]]  The bond has the same $YTM$, par value, years, and coupon rate as the above calculation.  The only difference is this bond makes semiannual payments.  Note the calculation of the coupon and rate per period, and the number of periods to adjust for the semiannual period.
 
@@ -103,7 +103,7 @@ return 0;
 : The bond's value is $857.88
 
 
-*** The effect of semiannual compounding
+** The effect of semiannual compounding
 
 Note the above two bonds have the same coupon, time to maturity, and yield.  The only difference is the latter has semiannual compounding.  So can you explain why the second bond has a lower price?
 
@@ -131,9 +131,9 @@ main (void)
 
 
 
-** Calculating the YTM Given the Price
+* Calculating the YTM Given the Price
 
-*** Annual Payments
+** Annual Payments
 
 #+BEGIN_SRC python :results output :exports both
 from scipy import optimize
@@ -154,7 +154,7 @@ print("The YTM is: ", round(root * 100, 2), "%")
 #+RESULTS:
 : The YTM is:  7.0 %
 
-*** Semiannual payments
+** Semiannual payments
 
 #+BEGIN_SRC R :results output :exports both
 par <- 1000.0
@@ -176,6 +176,46 @@ print(paste0("The YTM is: ", round(optim(0.1, eq)$par * 100, 2), "%"))
 : [1] "The YTM is: 7%"
 
 
+* Interest Rate Risk
+
+We have seen above that the bond's price changes as its yield changes.  Further a lower yield increases the bond's price, and conversely a higher yield decreases the bond's price.  We can see a the above bond (semiannual period) plotted on /YTM/ in the chart below:
+
+#+BEGIN_SRC R :results output :exports both
+par <- 1000.0
+years <- 10.0
+coupon <- 0.05
+num_periods <- years * 2.0
+coupon_pmt_per_period <- (coupon / 2.0) * par
+
+bv <- function(ytm){
+    coupon_pmt_per_period * (1 - 1 /(1 + ytm / 2)^num_periods) / (ytm / 2) + par / (1 + ytm / 2)^num_periods
+}
+
+library(highcharter)
+library(htmlwidgets)
+d <- data.frame(cbind(seq(0.01, 0.3, by = 0.01)), round(bv(seq(0.01, 0.3, by = 0.01)), 2))
+names(d) <- c("YTM", "Price")
+hc <- hchart(d, "line", hcaes(x = YTM, y = Price, value = Price), name = "Bond Price ($)") %>% hc_title(text="Bond Price and Yield")
+saveWidget(hc_add_theme(hc, hc_theme_economist()), "bond_plot.html")
+#+END_SRC
+
+
+#+BEGIN_EXPORT html
+<style>
+iframe {
+  width: 1000px; /* adjust to your needs */
+  max-width: 100%; /* to make it responsive */
+  height: 500px;
+  border:none;
+}
+</style>
+<div className="iframe">
+<iframe src="./bond_plot.html"></iframe>
+</div>
+#+END_EXPORT
+
+So you can see bond's can have a great deal of **interest rate risk**.  This is the risk you buy the bond for $1000 at a 5% /YTM/ and the /YTM/ on the bond increases to 20%, where the bond is worth $361.48 (if years have passes the bond would have a different price, because the above bond is calculated with 10 years to maturity).  
+
 * [[https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests][Reading Ease Score]]
 
 #+BEGIN_SRC elisp :results output :exports results
@@ -184,7 +224,7 @@ print(paste0("The YTM is: ", round(optim(0.1, eq)$par * 100, 2), "%"))
 
 #+RESULTS:
 : 
-: "Flesch-Kincaid reading ease score: 104.37 Very easy (5th grade)"
+: "Flesch-Kincaid reading ease score: 102.09 Very easy (5th grade)"
 
 #+BEGIN_SRC elisp :results output :exports results
 (print (writegood-grade-level))
@@ -192,7 +232,7 @@ print(paste0("The YTM is: ", round(optim(0.1, eq)$par * 100, 2), "%"))
 
 #+RESULTS:
 : 
-: "Flesch-Kincaid grade level score: 1.52"
+: "Flesch-Kincaid grade level score: 2.31"
 
 
 
