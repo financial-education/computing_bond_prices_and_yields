@@ -1,6 +1,6 @@
 #+title: Bond Price and Yield
 #+author: Matt Brigida, Ph.D.
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 In these notes we'll discuss calculating a bond's price given its yield, and also conversely calculating its yield given its price.  Before we do, however, it is important to understand why we do these calculations and what they mean. First consider:
 

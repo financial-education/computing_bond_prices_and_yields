@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-09-27 Sun 13:01 -->
+<!-- 2021-01-25 Mon 15:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bond Price and Yield</title>
@@ -180,12 +180,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css"/>
-<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
-<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -262,21 +262,21 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc1881fc">1. Calculating Bond Price Given YTM</a>
+<li><a href="#org5590aab">1. Calculating Bond Price Given YTM</a>
 <ul>
-<li><a href="#org1dfa1f3">1.1. Annual Payments</a></li>
-<li><a href="#org0460e93">1.2. Semiannual Payments</a></li>
-<li><a href="#org12176a2">1.3. The effect of semiannual compounding</a></li>
+<li><a href="#org2782233">1.1. Annual Payments</a></li>
+<li><a href="#orgcfdb64f">1.2. Semiannual Payments</a></li>
+<li><a href="#org7dd955e">1.3. The effect of semiannual compounding</a></li>
 </ul>
 </li>
-<li><a href="#orga861d2b">2. Calculating the YTM Given the Price</a>
+<li><a href="#org728bcb6">2. Calculating the YTM Given the Price</a>
 <ul>
-<li><a href="#org88ba3b9">2.1. Annual Payments</a></li>
-<li><a href="#org358509e">2.2. Semiannual payments</a></li>
+<li><a href="#org930a05c">2.1. Annual Payments</a></li>
+<li><a href="#org2210249">2.2. Semiannual payments</a></li>
 </ul>
 </li>
-<li><a href="#orgd3a71e8">3. Interest Rate Risk</a></li>
-<li><a href="#orge7876c1">4. Reading Ease Score</a></li>
+<li><a href="#org00e1667">3. Interest Rate Risk</a></li>
+<li><a href="#org7f997a4">4. Reading Ease Score</a></li>
 </ul>
 </div>
 </div>
@@ -304,8 +304,8 @@ So here we have three separate notes each with different prices but the same yie
 We are not <b><b>valuing</b></b> a bond here however.  Bond valuation means figuring out how much a bond is worth, and can be done using, for example, zero coupon bonds (for treasury bonds). What we are doing is being told the yield, which with the bond's features (maturity, coupon, etc), uniquely determines the price.  You can think of this a <b><b>bond price/yield translation</b></b>.
 </p>
 
-<div id="outline-container-orgc1881fc" class="outline-2">
-<h2 id="orgc1881fc"><span class="section-number-2">1</span> Calculating Bond Price Given YTM</h2>
+<div id="outline-container-org5590aab" class="outline-2">
+<h2 id="org5590aab"><span class="section-number-2">1</span> Calculating Bond Price Given YTM</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The only thing we have to take care doing is setting up the cash flow per period and the rate per period.  Once we understand these, calculation of the bond value is a simply application of the time-value-of-money formulas we learned earlier. 
@@ -399,22 +399,22 @@ where \(YTM\) denotes the yield-to-maturity.
 </div>
 
 
-<div id="outline-container-org1dfa1f3" class="outline-3">
-<h3 id="org1dfa1f3"><span class="section-number-3">1.1</span> Annual Payments</h3>
+<div id="outline-container-org2782233" class="outline-3">
+<h3 id="org2782233"><span class="section-number-3">1.1</span> Annual Payments</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 The source code below is in <a href="https://www.rust-lang.org/">Rust, which is a new systems programming language with a seemingly clairvoyant compiler.</a>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #268bd2; font-weight: bold;">fn</span> <span style="color: #d75fd7; font-weight: bold;">main</span>() {
-    bond_value_annual_payments(0.07, 1000.0, 10.0, 0.05); <span style="color: #008787; background-color: #262626;">//</span><span style="color: #008787; background-color: #262626;">ytm, par, years, coupon</span>
+<pre class="src src-rust"><span style="color: #859900;">fn</span> <span style="color: #b58900;">main</span>() {
+    bond_value_annual_payments(0.07, 1000.0, 10.0, 0.05); <span style="color: #586e75; font-style: italic;">//</span><span style="color: #586e75; font-style: italic;">ytm, par, years, coupon</span>
 }
 
-<span style="color: #268bd2; font-weight: bold;">fn</span> <span style="color: #d75fd7; font-weight: bold;">bond_value_annual_payments</span>(<span style="color: #8787d7;">ytm</span>: <span style="color: #df005f; font-weight: bold;">f32</span>, <span style="color: #8787d7;">par</span>: <span style="color: #df005f; font-weight: bold;">f32</span>, <span style="color: #8787d7;">years</span>: <span style="color: #df005f; font-weight: bold;">f32</span>, <span style="color: #8787d7;">coupon</span>: <span style="color: #df005f; font-weight: bold;">f32</span>) {
+<span style="color: #859900;">fn</span> <span style="color: #b58900;">bond_value_annual_payments</span>(<span style="color: #6c71c4;">ytm</span>: <span style="color: #268bd2;">f32</span>, <span style="color: #6c71c4;">par</span>: <span style="color: #268bd2;">f32</span>, <span style="color: #6c71c4;">years</span>: <span style="color: #268bd2;">f32</span>, <span style="color: #6c71c4;">coupon</span>: <span style="color: #268bd2;">f32</span>) {
 
-    <span style="color: #268bd2; font-weight: bold;">let</span> <span style="color: #8787d7;">bv</span>: <span style="color: #df005f; font-weight: bold;">f32</span> = par * coupon * (1.0 - 1.0 / (1.0 + ytm).powf(years)) / ytm + par / (1.0 + ytm).powf(years);
-    <span style="color: #268bd2;">println!</span>(<span style="color: #2aa198;">"The bond's value is: $</span><span style="color: #2aa198; font-style: italic;">{:.2}</span><span style="color: #2aa198;">"</span>, bv);
+    <span style="color: #859900;">let</span> <span style="color: #6c71c4;">bv</span>: <span style="color: #268bd2;">f32</span> = par * coupon * (1.0 - 1.0 / (1.0 + ytm).powf(years)) / ytm + par / (1.0 + ytm).powf(years);
+    <span style="color: #6c71c4;">println!</span>(<span style="color: #2aa198;">"The bond's value is: $</span><span style="color: #2aa198; font-style: italic;">{:.2}</span><span style="color: #2aa198;">"</span>, bv);
 }
 
 </pre>
@@ -428,30 +428,30 @@ The bond's value is: $859.53
 </div>
 
 
-<div id="outline-container-org0460e93" class="outline-3">
-<h3 id="org0460e93"><span class="section-number-3">1.2</span> Semiannual Payments</h3>
+<div id="outline-container-orgcfdb64f" class="outline-3">
+<h3 id="orgcfdb64f"><span class="section-number-3">1.2</span> Semiannual Payments</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 The source code below is written in <a href="https://en.wikipedia.org/wiki/C_(programming_language)">good old C.</a>  The bond has the same \(YTM\), par value, years, and coupon rate as the above calculation.  The only difference is this bond makes semiannual payments.  Note the calculation of the coupon and rate per period, and the number of periods to adjust for the semiannual period.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C"><span style="color: #df005f; font-weight: bold;">int</span>
-<span style="color: #d75fd7; font-weight: bold;">main</span>(){
+<pre class="src src-C"><span style="color: #268bd2;">int</span>
+<span style="color: #b58900;">main</span>(){
 
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">ytm</span> = 0.07;
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">par</span> = 1000.0;
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">years</span> = 10.0;
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">coupon</span> = 0.05;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">ytm</span> = 0.07;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">par</span> = 1000.0;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">years</span> = 10.0;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">coupon</span> = 0.05;
 
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">num_periods</span> = years * 2.0;
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">rate_per_period</span> = ytm / 2.0;
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">coupon_pmt_per_period</span> = (coupon / 2.0) * par;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">num_periods</span> = years * 2.0;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">rate_per_period</span> = ytm / 2.0;
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">coupon_pmt_per_period</span> = (coupon / 2.0) * par;
 
-<span style="color: #df005f; font-weight: bold;">double</span> <span style="color: #8787d7;">bv</span> = coupon_pmt_per_period * (1 - 1 / pow(1 + rate_per_period, num_periods)) / rate_per_period + par / pow(1 + rate_per_period, num_periods);
+<span style="color: #268bd2;">double</span> <span style="color: #6c71c4;">bv</span> = coupon_pmt_per_period * (1 - 1 / pow(1 + rate_per_period, num_periods)) / rate_per_period + par / pow(1 + rate_per_period, num_periods);
 
 printf(<span style="color: #2aa198;">"The bond's value is $%.2f\n"</span>, bv);
-<span style="color: #268bd2; font-weight: bold;">return</span> 0;
+<span style="color: #859900;">return</span> 0;
 
 }
 
@@ -466,8 +466,8 @@ The bond's value is $857.88
 </div>
 
 
-<div id="outline-container-org12176a2" class="outline-3">
-<h3 id="org12176a2"><span class="section-number-3">1.3</span> The effect of semiannual compounding</h3>
+<div id="outline-container-org7dd955e" class="outline-3">
+<h3 id="org7dd955e"><span class="section-number-3">1.3</span> The effect of semiannual compounding</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Note the above two bonds have the same coupon, time to maturity, and yield.  The only difference is the latter has semiannual compounding.  So can you explain why the second bond has a lower price?
@@ -480,27 +480,27 @@ Note the above two bonds have the same coupon, time to maturity, and yield.  The
 
 
 
-<div id="outline-container-orga861d2b" class="outline-2">
-<h2 id="orga861d2b"><span class="section-number-2">2</span> Calculating the YTM Given the Price</h2>
+<div id="outline-container-org728bcb6" class="outline-2">
+<h2 id="org728bcb6"><span class="section-number-2">2</span> Calculating the YTM Given the Price</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org88ba3b9" class="outline-3">
-<h3 id="org88ba3b9"><span class="section-number-3">2.1</span> Annual Payments</h3>
+<div id="outline-container-org930a05c" class="outline-3">
+<h3 id="org930a05c"><span class="section-number-3">2.1</span> Annual Payments</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #268bd2; font-weight: bold;">from</span> scipy <span style="color: #268bd2; font-weight: bold;">import</span> optimize
+<pre class="src src-python"><span style="color: #859900;">from</span> scipy <span style="color: #859900;">import</span> optimize
 
-<span style="color: #8787d7;">coupon_pmt</span> = 1000 * 0.05
-<span style="color: #8787d7;">years</span> = 10
-<span style="color: #8787d7;">bv</span> = 859.53  <span style="color: #008787; background-color: #262626;">## </span><span style="color: #008787; background-color: #262626;">this is our bond value above (annual payments)</span>
+<span style="color: #6c71c4;">coupon_pmt</span> = 1000 * 0.05
+<span style="color: #6c71c4;">years</span> = 10
+<span style="color: #6c71c4;">bv</span> = 859.53  <span style="color: #586e75; font-style: italic;">## </span><span style="color: #586e75; font-style: italic;">this is our bond value above (annual payments)</span>
 
-<span style="color: #268bd2; font-weight: bold;">def</span> <span style="color: #d75fd7; font-weight: bold;">eq</span><span style="color: #268bd2;">(</span>YTM<span style="color: #268bd2;">)</span>:
-<span style="background-color: #262626;"> </span>   <span style="color: #268bd2; font-weight: bold;">return</span><span style="color: #268bd2;">(</span>coupon_pmt * <span style="color: #d75fd7;">(</span>1 - 1 / <span style="color: #268bd2;">pow</span><span style="color: #2aa198;">(</span>1 + YTM, years<span style="color: #2aa198;">)</span><span style="color: #d75fd7;">)</span> / YTM + 1000 / <span style="color: #268bd2;">pow</span><span style="color: #d75fd7;">(</span>1 + YTM, years<span style="color: #d75fd7;">)</span> - bv<span style="color: #268bd2;">)</span>
+<span style="color: #859900;">def</span> <span style="color: #b58900;">eq</span><span style="color: #839496;">(</span>YTM<span style="color: #839496;">)</span>:
+<span style="color: #586e75; background-color: #073642;"> </span>   <span style="color: #859900;">return</span><span style="color: #839496;">(</span>coupon_pmt * <span style="color: #2aa198;">(</span>1 - 1 / <span style="color: #6c71c4;">pow</span><span style="color: #b58900;">(</span>1 + YTM, years<span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span> / YTM + 1000 / <span style="color: #6c71c4;">pow</span><span style="color: #2aa198;">(</span>1 + YTM, years<span style="color: #2aa198;">)</span> - bv<span style="color: #839496;">)</span>
 
-<span style="color: #8787d7;">root</span> = optimize.newton<span style="color: #268bd2;">(</span>eq, 0.1<span style="color: #268bd2;">)</span> <span style="color: #008787; background-color: #262626;">## </span><span style="color: #008787; background-color: #262626;">0.1 is our initial guess</span>
-<span style="color: #008787; background-color: #262626;">## </span><span style="color: #008787; background-color: #262626;">note, there are not multiple roots here, but if there were would this root finder list them????</span>
+<span style="color: #6c71c4;">root</span> = optimize.newton<span style="color: #839496;">(</span>eq, 0.1<span style="color: #839496;">)</span> <span style="color: #586e75; font-style: italic;">## </span><span style="color: #586e75; font-style: italic;">0.1 is our initial guess</span>
+<span style="color: #586e75; font-style: italic;">## </span><span style="color: #586e75; font-style: italic;">note, there are not multiple roots here, but if there were would this root finder list them????</span>
 
-<span style="color: #268bd2; font-weight: bold;">print</span><span style="color: #268bd2;">(</span><span style="color: #2aa198;">"The YTM is: "</span>, <span style="color: #268bd2;">round</span><span style="color: #d75fd7;">(</span>root * 100, 2<span style="color: #d75fd7;">)</span>, <span style="color: #2aa198;">"%"</span><span style="color: #268bd2;">)</span>
+<span style="color: #859900;">print</span><span style="color: #839496;">(</span><span style="color: #2aa198;">"The YTM is: "</span>, <span style="color: #6c71c4;">round</span><span style="color: #2aa198;">(</span>root * 100, 2<span style="color: #2aa198;">)</span>, <span style="color: #2aa198;">"%"</span><span style="color: #839496;">)</span>
 </pre>
 </div>
 
@@ -511,23 +511,23 @@ The YTM is:  7.0 %
 </div>
 </div>
 
-<div id="outline-container-org358509e" class="outline-3">
-<h3 id="org358509e"><span class="section-number-3">2.2</span> Semiannual payments</h3>
+<div id="outline-container-org2210249" class="outline-3">
+<h3 id="org2210249"><span class="section-number-3">2.2</span> Semiannual payments</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
-<pre class="src src-R">par <span style="color: #df005f; font-weight: bold;">&lt;-</span> 1000.0
-years <span style="color: #df005f; font-weight: bold;">&lt;-</span> 10.0
-coupon <span style="color: #df005f; font-weight: bold;">&lt;-</span> 0.05
-bv <span style="color: #df005f; font-weight: bold;">&lt;-</span> 857.88
+<pre class="src src-R">par <span style="color: #268bd2;">&lt;-</span> 1000.0
+years <span style="color: #268bd2;">&lt;-</span> 10.0
+coupon <span style="color: #268bd2;">&lt;-</span> 0.05
+bv <span style="color: #268bd2;">&lt;-</span> 857.88
 
-num_periods <span style="color: #df005f; font-weight: bold;">&lt;-</span> years * 2.0
-coupon_pmt_per_period <span style="color: #df005f; font-weight: bold;">&lt;-</span> <span style="color: #268bd2;">(</span>coupon / 2.0<span style="color: #268bd2;">)</span> * par
+num_periods <span style="color: #268bd2;">&lt;-</span> years * 2.0
+coupon_pmt_per_period <span style="color: #268bd2;">&lt;-</span> <span style="color: #839496;">(</span>coupon / 2.0<span style="color: #839496;">)</span> * par
 
-<span style="color: #d75fd7; font-weight: bold;">eq</span> <span style="color: #df005f; font-weight: bold;">&lt;-</span> <span style="color: #268bd2; font-weight: bold;">function</span><span style="color: #268bd2;">(</span>ytm<span style="color: #268bd2;">){</span>
-    <span style="color: #d75fd7;">(</span>coupon_pmt_per_period * <span style="color: #2aa198;">(</span>1 - 1 /<span style="color: #67b11d;">(</span>1 + ytm / 2<span style="color: #67b11d;">)</span>^num_periods<span style="color: #2aa198;">)</span> / <span style="color: #2aa198;">(</span>ytm / 2<span style="color: #2aa198;">)</span> + par / <span style="color: #2aa198;">(</span>1 + ytm / 2<span style="color: #2aa198;">)</span>^num_periods - bv<span style="color: #d75fd7;">)</span>^2
-<span style="color: #268bd2;">}</span>
+<span style="color: #b58900;">eq</span> <span style="color: #268bd2;">&lt;-</span> <span style="color: #859900;">function</span><span style="color: #839496;">(</span>ytm<span style="color: #839496;">){</span>
+    <span style="color: #2aa198;">(</span>coupon_pmt_per_period * <span style="color: #b58900;">(</span>1 - 1 /<span style="color: #859900;">(</span>1 + ytm / 2<span style="color: #859900;">)</span>^num_periods<span style="color: #b58900;">)</span> / <span style="color: #b58900;">(</span>ytm / 2<span style="color: #b58900;">)</span> + par / <span style="color: #b58900;">(</span>1 + ytm / 2<span style="color: #b58900;">)</span>^num_periods - bv<span style="color: #2aa198;">)</span>^2
+<span style="color: #839496;">}</span>
 
-print<span style="color: #268bd2;">(</span>paste0<span style="color: #d75fd7;">(</span><span style="color: #2aa198;">"The YTM is: "</span>, round<span style="color: #2aa198;">(</span>optim<span style="color: #67b11d;">(</span>0.1, eq<span style="color: #67b11d;">)</span>$par * 100, 2<span style="color: #2aa198;">)</span>, <span style="color: #2aa198;">"%"</span><span style="color: #d75fd7;">)</span><span style="color: #268bd2;">)</span>
+print<span style="color: #839496;">(</span>paste0<span style="color: #2aa198;">(</span><span style="color: #2aa198;">"The YTM is: "</span>, round<span style="color: #b58900;">(</span>optim<span style="color: #859900;">(</span>0.1, eq<span style="color: #859900;">)</span>$par * 100, 2<span style="color: #b58900;">)</span>, <span style="color: #2aa198;">"%"</span><span style="color: #2aa198;">)</span><span style="color: #839496;">)</span>
 </pre>
 </div>
 
@@ -540,30 +540,30 @@ print<span style="color: #268bd2;">(</span>paste0<span style="color: #d75fd7;">(
 </div>
 
 
-<div id="outline-container-orgd3a71e8" class="outline-2">
-<h2 id="orgd3a71e8"><span class="section-number-2">3</span> Interest Rate Risk</h2>
+<div id="outline-container-org00e1667" class="outline-2">
+<h2 id="org00e1667"><span class="section-number-2">3</span> Interest Rate Risk</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 We have seen above that the bond's price changes as its yield changes.  Further a lower yield increases the bond's price, and conversely a higher yield decreases the bond's price.  We can see a the above bond (semiannual period) plotted on <i>YTM</i> in the chart below:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-R">par <span style="color: #df005f; font-weight: bold;">&lt;-</span> 1000.0
-years <span style="color: #df005f; font-weight: bold;">&lt;-</span> 10.0
-coupon <span style="color: #df005f; font-weight: bold;">&lt;-</span> 0.05
-num_periods <span style="color: #df005f; font-weight: bold;">&lt;-</span> years * 2.0
-coupon_pmt_per_period <span style="color: #df005f; font-weight: bold;">&lt;-</span> <span style="color: #268bd2;">(</span>coupon / 2.0<span style="color: #268bd2;">)</span> * par
+<pre class="src src-R">par <span style="color: #268bd2;">&lt;-</span> 1000.0
+years <span style="color: #268bd2;">&lt;-</span> 10.0
+coupon <span style="color: #268bd2;">&lt;-</span> 0.05
+num_periods <span style="color: #268bd2;">&lt;-</span> years * 2.0
+coupon_pmt_per_period <span style="color: #268bd2;">&lt;-</span> <span style="color: #839496;">(</span>coupon / 2.0<span style="color: #839496;">)</span> * par
 
-<span style="color: #d75fd7; font-weight: bold;">bv</span> <span style="color: #df005f; font-weight: bold;">&lt;-</span> <span style="color: #268bd2; font-weight: bold;">function</span><span style="color: #268bd2;">(</span>ytm<span style="color: #268bd2;">){</span>
-    coupon_pmt_per_period * <span style="color: #d75fd7;">(</span>1 - 1 /<span style="color: #2aa198;">(</span>1 + ytm / 2<span style="color: #2aa198;">)</span>^num_periods<span style="color: #d75fd7;">)</span> / <span style="color: #d75fd7;">(</span>ytm / 2<span style="color: #d75fd7;">)</span> + par / <span style="color: #d75fd7;">(</span>1 + ytm / 2<span style="color: #d75fd7;">)</span>^num_periods
-<span style="color: #268bd2;">}</span>
+<span style="color: #b58900;">bv</span> <span style="color: #268bd2;">&lt;-</span> <span style="color: #859900;">function</span><span style="color: #839496;">(</span>ytm<span style="color: #839496;">){</span>
+    coupon_pmt_per_period * <span style="color: #2aa198;">(</span>1 - 1 /<span style="color: #b58900;">(</span>1 + ytm / 2<span style="color: #b58900;">)</span>^num_periods<span style="color: #2aa198;">)</span> / <span style="color: #2aa198;">(</span>ytm / 2<span style="color: #2aa198;">)</span> + par / <span style="color: #2aa198;">(</span>1 + ytm / 2<span style="color: #2aa198;">)</span>^num_periods
+<span style="color: #839496;">}</span>
 
-<span style="color: #268bd2;">library</span><span style="color: #268bd2;">(</span>highcharter<span style="color: #268bd2;">)</span>
-<span style="color: #268bd2;">library</span><span style="color: #268bd2;">(</span>htmlwidgets<span style="color: #268bd2;">)</span>
-d <span style="color: #df005f; font-weight: bold;">&lt;-</span> data.frame<span style="color: #268bd2;">(</span>cbind<span style="color: #d75fd7;">(</span>seq<span style="color: #2aa198;">(</span>0.01, 0.3, by = 0.01<span style="color: #2aa198;">)</span><span style="color: #d75fd7;">)</span>, round<span style="color: #d75fd7;">(</span>bv<span style="color: #2aa198;">(</span>seq<span style="color: #67b11d;">(</span>0.01, 0.3, by = 0.01<span style="color: #67b11d;">)</span><span style="color: #2aa198;">)</span>, 2<span style="color: #d75fd7;">)</span><span style="color: #268bd2;">)</span>
-names<span style="color: #268bd2;">(</span>d<span style="color: #268bd2;">)</span> <span style="color: #df005f; font-weight: bold;">&lt;-</span> c<span style="color: #268bd2;">(</span><span style="color: #2aa198;">"YTM"</span>, <span style="color: #2aa198;">"Price"</span><span style="color: #268bd2;">)</span>
-hc <span style="color: #df005f; font-weight: bold;">&lt;-</span> hchart<span style="color: #268bd2;">(</span>d, <span style="color: #2aa198;">"line"</span>, hcaes<span style="color: #d75fd7;">(</span>x = YTM, y = Price, value = Price<span style="color: #d75fd7;">)</span>, name = <span style="color: #2aa198;">"Bond Price ($)"</span><span style="color: #268bd2;">)</span> <span style="color: #8787d7;">%&gt;%</span> hc_title<span style="color: #268bd2;">(</span>text=<span style="color: #2aa198;">"Bond Price and Yield"</span><span style="color: #268bd2;">)</span>
-saveWidget<span style="color: #268bd2;">(</span>hc_add_theme<span style="color: #d75fd7;">(</span>hc, hc_theme_economist<span style="color: #2aa198;">()</span><span style="color: #d75fd7;">)</span>, <span style="color: #2aa198;">"bond_plot.html"</span><span style="color: #268bd2;">)</span>
+<span style="color: #268bd2;">library</span><span style="color: #839496;">(</span>highcharter<span style="color: #839496;">)</span>
+<span style="color: #268bd2;">library</span><span style="color: #839496;">(</span>htmlwidgets<span style="color: #839496;">)</span>
+d <span style="color: #268bd2;">&lt;-</span> data.frame<span style="color: #839496;">(</span>cbind<span style="color: #2aa198;">(</span>seq<span style="color: #b58900;">(</span>0.01, 0.3, by = 0.01<span style="color: #b58900;">)</span><span style="color: #2aa198;">)</span>, round<span style="color: #2aa198;">(</span>bv<span style="color: #b58900;">(</span>seq<span style="color: #859900;">(</span>0.01, 0.3, by = 0.01<span style="color: #859900;">)</span><span style="color: #b58900;">)</span>, 2<span style="color: #2aa198;">)</span><span style="color: #839496;">)</span>
+names<span style="color: #839496;">(</span>d<span style="color: #839496;">)</span> <span style="color: #268bd2;">&lt;-</span> c<span style="color: #839496;">(</span><span style="color: #2aa198;">"YTM"</span>, <span style="color: #2aa198;">"Price"</span><span style="color: #839496;">)</span>
+hc <span style="color: #268bd2;">&lt;-</span> hchart<span style="color: #839496;">(</span>d, <span style="color: #2aa198;">"line"</span>, hcaes<span style="color: #2aa198;">(</span>x = YTM, y = Price, value = Price<span style="color: #2aa198;">)</span>, name = <span style="color: #2aa198;">"Bond Price ($)"</span><span style="color: #839496;">)</span> <span style="color: #268bd2;">%&gt;%</span> hc_title<span style="color: #839496;">(</span>text=<span style="color: #2aa198;">"Bond Price and Yield"</span><span style="color: #839496;">)</span>
+saveWidget<span style="color: #839496;">(</span>hc_add_theme<span style="color: #2aa198;">(</span>hc, hc_theme_economist<span style="color: #b58900;">()</span><span style="color: #2aa198;">)</span>, <span style="color: #2aa198;">"bond_plot.html"</span><span style="color: #839496;">)</span>
 </pre>
 </div>
 
@@ -585,18 +585,18 @@ So you can see bond's can have a great deal of <b><b>interest rate risk</b></b>.
 </div>
 </div>
 
-<div id="outline-container-orge7876c1" class="outline-2">
-<h2 id="orge7876c1"><span class="section-number-2">4</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
+<div id="outline-container-org7f997a4" class="outline-2">
+<h2 id="org7f997a4"><span class="section-number-2">4</span> <a href="https://en.wikipedia.org/wiki/Flesch%25E2%2580%2593Kincaid_readability_tests">Reading Ease Score</a></h2>
 <div class="outline-text-2" id="text-4">
 <pre class="example">
 
-"Flesch-Kincaid reading ease score: 102.62 Very easy (5th grade)"
+"Flesch-Kincaid reading ease score: 102.67 Very easy (5th grade)"
 
 </pre>
 
 <pre class="example">
 
-"Flesch-Kincaid grade level score: 2.15"
+"Flesch-Kincaid grade level score: 2.14"
 
 </pre>
 </div>
@@ -604,7 +604,7 @@ So you can see bond's can have a great deal of <b><b>interest rate risk</b></b>.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2020-09-27 Sun 13:01</p>
+<p class="date">Created: 2021-01-25 Mon 15:03</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
